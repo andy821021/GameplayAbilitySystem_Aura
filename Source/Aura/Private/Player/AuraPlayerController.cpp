@@ -5,10 +5,19 @@
 #include "EnhancedInputSubsystems.h"
 #include "EnhancedInputComponent.h"
 #include "InputActionValue.h"
+#include "Interaction/EnemyInterface.h"
 
 AAuraPlayerController::AAuraPlayerController()
 {
 	bReplicates = true;
+}
+
+void AAuraPlayerController::PlayerTick(float DeltaTime)
+{
+	Super::PlayerTick(DeltaTime);
+
+	CursorTrace();
+	
 }
 
 void AAuraPlayerController::BeginPlay()
@@ -53,4 +62,63 @@ void AAuraPlayerController::Move(const FInputActionValue& InputActionValue)
 		ControlledPawn->AddMovementInput(ForwardDirection,InputAxisVector.Y);
 		ControlledPawn->AddMovementInput(RightDirection,InputAxisVector.X);
 	}
+}
+
+void AAuraPlayerController::CursorTrace()
+{
+	FHitResult CursorHit;
+	GetHitResultUnderCursor(ECC_Visibility,false,CursorHit);
+	if (!CursorHit.bBlockingHit) return;
+
+	LastActor = ThisActor;
+	ThisActor = CursorHit.GetActor();
+
+	/*
+	 * 這邊處理會遇到機個狀況
+	 *	A. LastActor is null && ThisActor is null
+	 *		- Do nothing
+	 *	B. LastActor is null && ThisActor is valid
+	 *		- Highlight ThisActor
+	 *	C. LastActor is valid && ThisActor is null
+	 *		- Unhighlight LastActor
+	 *	D. Both actor are valid, but LastActor != ThisActor
+	 *		- Unhighlight LastActor && Highlight ThisActor
+	 *	E. Both actor are valid, and LastActor = ThisActor
+	 *		- Do nothing
+	 */
+
+	if (LastActor.GetInterface() == nullptr)
+	{
+		if (ThisActor.GetInterface() != nullptr)
+		{
+			//B. LastActor is null && ThisActor is valid
+			ThisActor->HighLightActor();
+		}
+		else
+		{
+			//A. LastActor is null && ThisActor is null
+		}
+	}
+	else
+	{
+		if (ThisActor.GetInterface()!=nullptr)
+		{
+			if (ThisActor == LastActor)
+			{
+				//E. Both actor are valid, and LastActor = ThisActor
+			}
+			else
+			{
+				//D. Both actor are valid, but LastActor != ThisActor
+				LastActor->UnHighLightActor();
+				ThisActor->HighLightActor();
+			}
+		}
+		else
+		{
+			//C. LastActor is valid && ThisActor is null
+			LastActor->UnHighLightActor();
+		}
+	}
+	
 }
