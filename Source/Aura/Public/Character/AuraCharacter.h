@@ -16,4 +16,14 @@ class AURA_API AAuraCharacter : public AAuraCharacterBase
 public:
 	//C12
 	AAuraCharacter();
+
+	//C23
+	//For Server init set ASC
+	virtual void PossessedBy(AController* NewController) override;
+	//For Client int set ASC
+	virtual void OnRep_PlayerState() override;
+
+private:
+	//C23
+	void InitAbilityActorInfo();
 };
