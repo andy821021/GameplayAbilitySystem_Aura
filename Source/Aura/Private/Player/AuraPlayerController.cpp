@@ -27,8 +27,13 @@ void AAuraPlayerController::BeginPlay()
 	check(AuraContext);
 
 	UEnhancedInputLocalPlayerSubsystem* Subsystem = ULocalPlayer::GetSubsystem<UEnhancedInputLocalPlayerSubsystem>(GetLocalPlayer());
-	check(Subsystem);
-	Subsystem->AddMappingContext(AuraContext,0);
+
+	//C33改
+	//check(Subsystem);
+	if (Subsystem)
+	{
+		Subsystem->AddMappingContext(AuraContext,0);
+	}
 
 	bShowMouseCursor = true;
 	DefaultMouseCursor = EMouseCursor::Default;
@@ -72,7 +77,6 @@ void AAuraPlayerController::CursorTrace()
 
 	LastActor = ThisActor;
 	ThisActor = CursorHit.GetActor();
-
 	/*
 	 * 這邊處理會遇到機個狀況
 	 *	A. LastActor is null && ThisActor is null
