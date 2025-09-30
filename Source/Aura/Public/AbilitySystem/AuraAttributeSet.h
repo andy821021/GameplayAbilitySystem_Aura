@@ -18,6 +18,41 @@
 	GAMEPLAYATTRIBUTE_VALUE_SETTER(PropertyName) \
 	GAMEPLAYATTRIBUTE_VALUE_INITTER(PropertyName)
 
+//C47
+USTRUCT(BlueprintType)
+struct FEffectProperties
+{
+	GENERATED_BODY()
+	FEffectProperties(){};
+	/*
+	FEffectProperties(FGameplayEffectContextHandle GECH,UAbilitySystemComponent* SASC,AActor* SAA,AController* SController,ACharacter* SCharacter,
+		UAbilitySystemComponent* TASC,AActor* TAA,AController* TController,ACharacter* TCharacter):
+	GameplayEffectContextHandle(GECH),
+	SourceASC(SASC),SourceAvatarActor(SAA),SourceController(SController),SourceCharacter(SCharacter),
+	TargetASC(TASC),TargetAvatarActor(TAA),TargetController(TController),TargetCharacter(TCharacter)
+	{};
+	*/
+	UPROPERTY(EditAnywhere, BlueprintReadWrite)
+	FGameplayEffectContextHandle GameplayEffectContextHandle ;
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite)
+	TObjectPtr<UAbilitySystemComponent> SourceASC = nullptr;
+	UPROPERTY(EditAnywhere, BlueprintReadWrite)
+	TObjectPtr<AActor> SourceAvatarActor = nullptr;
+	UPROPERTY(EditAnywhere, BlueprintReadWrite)
+	TObjectPtr<AController> SourceController = nullptr;
+	UPROPERTY(EditAnywhere, BlueprintReadWrite)
+	TObjectPtr<ACharacter> SourceCharacter = nullptr;
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite)
+	TObjectPtr<UAbilitySystemComponent> TargetASC = nullptr;
+	UPROPERTY(EditAnywhere, BlueprintReadWrite)
+	TObjectPtr<AActor> TargetAvatarActor = nullptr;
+	UPROPERTY(EditAnywhere, BlueprintReadWrite)
+	TObjectPtr<AController> TargetController = nullptr;
+	UPROPERTY(EditAnywhere, BlueprintReadWrite)
+	TObjectPtr<ACharacter> TargetCharacter = nullptr;
+};
 
 UCLASS()
 class AURA_API UAuraAttributeSet : public UAttributeSet
@@ -56,6 +91,16 @@ public:
 	void OnRep_MaxMana(const FGameplayAttributeData& OldMaxMana) const;
 	//C26
 	ATTRIBUTE_ACCESSORS(UAuraAttributeSet,MaxMana);
+
+	//C46
+	virtual void PreAttributeChange(const FGameplayAttribute& Attribute, float& NewValue) override;
+
+	virtual void PreAttributeBaseChange(const FGameplayAttribute& Attribute, float& NewValue) const override;
+	
+	//C47
+	virtual void PostGameplayEffectExecute(const struct FGameplayEffectModCallbackData& Data) override;
+
+	virtual void SetEffectProperties(FEffectProperties& EP,const FGameplayEffectModCallbackData& Data);
 };
 
 
