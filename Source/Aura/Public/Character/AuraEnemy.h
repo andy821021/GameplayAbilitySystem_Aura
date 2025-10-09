@@ -20,7 +20,8 @@ protected:
 	//C23
 	virtual void BeginPlay() override;
 
-	
+	//C54 
+	virtual void InitAbilityActorInfo() override;
 public:
 	//C13
 	 virtual void HighLightActor() override;

@@ -35,4 +35,7 @@ protected:
 	TObjectPtr<UAbilitySystemComponent> AbilitySystemComponent;
 	UPROPERTY()
 	TObjectPtr<UAttributeSet> AttributeSet;
+
+	//C54 這個函數與ASC自帶的InitAbilityActorInfo()是不同的
+	virtual void InitAbilityActorInfo();
 };

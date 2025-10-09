@@ -24,6 +24,8 @@ public:
 	virtual void OnRep_PlayerState() override;
 
 private:
-	//C23
-	void InitAbilityActorInfo();
+	
+protected:
+	//C23 C54改
+	virtual void InitAbilityActorInfo() override;
 };

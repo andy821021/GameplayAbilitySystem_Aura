@@ -55,6 +55,7 @@ protected:
 
 	//C38
 	//C39
+	//可參考GPT說明:https://chatgpt.com/c/68d32edd-4a08-8333-ad42-e8c4bad57612
 	UFUNCTION(BlueprintCallable)
 	void ApplyEffectToTarget(AActor* TargetActor,TSubclassOf<UGameplayEffect> GameplayEffectClass);
 	

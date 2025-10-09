@@ -85,6 +85,7 @@ void AAuraEffectActor::ApplyEffectToTarget(AActor* TargetActor, TSubclassOf<UGam
 	FGameplayEffectSpecHandle EffectSpecHandle = TargetASC->MakeOutgoingSpec(GameplayEffectClass,ActorLevel,EffectContextHandle);
 	//C45
 	//偏難 要求是FGameplayEffectSpec& 引用 所以要用FGameplayEffectSpecHandle做操作
+	//同時啟動OnGameplayEffectAppliedDelegateToSelf這個委託的廣播
 	FActiveGameplayEffectHandle ActiveEffectHandle = TargetASC->ApplyGameplayEffectSpecToSelf(*EffectSpecHandle.Data.Get());
 	
 	//C45 考慮到多人遊戲狀況下的，複數角色重疊，需要用Map來做容器(用於結束重疊時的移除)
