@@ -22,15 +22,30 @@ protected:
 
 	//C54 
 	virtual void InitAbilityActorInfo() override;
+	
+	//C73
+	UPROPERTY(EditAnywhere,BlueprintReadOnly,Category="CharacterClassDefault")
+	int32 Level = 1;
+	
 public:
+	
+	// EnemyInterface //
 	//C13
 	 virtual void HighLightActor() override;
 	 virtual void UnHighLightActor() override;
-
+	// EndEnemyInterface //
+	
 	//C14
 	// UPROPERTY(BlueprintReadOnly)
 	// bool bHighLighted = false;
 	
 	//C15
 	AAuraEnemy();
+
+	// CombatInterface //
+	//C73
+	virtual int32 GetPlayerLevel() override;
+	// EndCombatInterface //
+private:
+	
 };

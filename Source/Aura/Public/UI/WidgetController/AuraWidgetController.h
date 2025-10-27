@@ -43,7 +43,8 @@ public:
 	//C33
 	UFUNCTION(BlueprintCallable)
 	void SetWidgetControllerParams(const FWidgetControllerParams& WCParams);
-	//C34
+	//C34 C93改
+	UFUNCTION(BlueprintCallable)
 	virtual void BroadcastInitialValues();
 	//C35
 	virtual void BindCallbacksToDependencies();

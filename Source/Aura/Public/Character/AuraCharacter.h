@@ -23,6 +23,11 @@ public:
 	//For Client int set ASC
 	virtual void OnRep_PlayerState() override;
 
+	// CombatInterface //
+	//C73
+	virtual int32 GetPlayerLevel() override;
+	// EndCombatInterface //
+
 private:
 	
 protected:

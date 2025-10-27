@@ -56,7 +56,7 @@ void UOverlayWidgetController::BindCallbacksToDependencies()
 				//C59 綁定在UE內的WBP_Overlay
 				MessageWidgetRowDelegate.Broadcast(*Row);
 			};
-		}
+		} 
 	}
 	);
 	//C62
