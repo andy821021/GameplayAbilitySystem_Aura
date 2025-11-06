@@ -1,0 +1,36 @@
+﻿// copy whatever u like
+
+
+#include "AbilitySystem/Abilities/AuraProjectileSpell.h"
+
+
+#include "Actor/AuraProjectile.h"
+#include "Interaction/CombatInterface.h"
+#include "Kismet/KismetSystemLibrary.h"
+
+void UAuraProjectileSpell::ActivateAbility(const FGameplayAbilitySpecHandle Handle,
+                                           const FGameplayAbilityActorInfo* ActorInfo, const FGameplayAbilityActivationInfo ActivationInfo,
+                                           const FGameplayEventData* TriggerEventData)
+{
+	Super::ActivateAbility(Handle, ActorInfo, ActivationInfo, TriggerEventData);
+
+	//C111改
+	//UKismetSystemLibrary::PrintString(GetWorld(), "Active Ability C++");
+
+	const bool bIsServer = HasAuthority(&ActivationInfo);
+	if (!bIsServer) return;
+
+	ICombatInterface* CombatInterface = Cast<ICombatInterface>(GetAvatarActorFromActorInfo());
+	if (CombatInterface)
+	{
+		//TODO: Set Rotation
+		
+		FTransform SpawnTransform;
+		SpawnTransform.SetLocation(FVector(CombatInterface->GetSocketLocation()));
+		AAuraProjectile* Projectile = GetWorld()->SpawnActorDeferred<AAuraProjectile>(ProjectileClass,SpawnTransform,GetOwningActorFromActorInfo(),Cast<APawn>(GetOwningActorFromActorInfo()),ESpawnActorCollisionHandlingMethod::AlwaysSpawn);
+
+		//TODO: give the projectile a gameplay effect spec for causing damage
+		
+		Projectile->FinishSpawning(SpawnTransform);
+	}
+}

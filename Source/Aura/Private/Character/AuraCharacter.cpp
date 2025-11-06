@@ -34,6 +34,8 @@ void AAuraCharacter::PossessedBy(AController* NewController)
 	AbilitySystemComponent = AuraPlayerState->GetAbilitySystemComponent();
 	AttributeSet = AuraPlayerState->GetAttributeSet();
 	*/
+	//C98
+	AddCharacterAbilities();
 }
 
 void AAuraCharacter::OnRep_PlayerState()
