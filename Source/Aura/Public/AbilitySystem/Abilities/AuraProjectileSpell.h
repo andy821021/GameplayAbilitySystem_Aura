@@ -24,4 +24,13 @@ class AURA_API UAuraProjectileSpell : public UAuraGameplayAbility
 	//C111
 	UPROPERTY(EditAnywhere,BlueprintReadOnly)
 	TSubclassOf<AAuraProjectile> ProjectileClass;
+
+	//C114 C120改
+	UFUNCTION(BlueprintCallable)
+	void SpawnProjectile(const FVector& ProjectileTargetLocation);
+
+	//C124
+	UPROPERTY(EditDefaultsOnly,BlueprintReadOnly)
+	TSubclassOf<UGameplayEffect> DamageEffectClass;
+
 };

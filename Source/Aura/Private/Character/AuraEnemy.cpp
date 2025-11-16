@@ -6,6 +6,9 @@
 #include "AbilitySystem/AuraAbilitySystemComponent.h"
 #include "AbilitySystem/AuraAttributeSet.h"
 #include "Aura/Aura.h"
+#include "Components/WidgetComponent.h"
+#include "UI/Widget/AuraUserWidget.h"
+#include "Components/WidgetComponent.h"
 
 AAuraEnemy::AAuraEnemy()
 {
@@ -25,12 +28,18 @@ AAuraEnemy::AAuraEnemy()
 	AbilitySystemComponent->SetReplicationMode(EGameplayEffectReplicationMode::Minimal);
 	//C21
 	AttributeSet = CreateDefaultSubobject<UAuraAttributeSet>("AttributeSet");
+	//C125
+	HealthBarOnHead = CreateDefaultSubobject<UWidgetComponent>("HealthBarWidget");
+	HealthBarOnHead->SetupAttachment(GetRootComponent());
+	HealthBarOnHead->SetWidgetSpace(EWidgetSpace::Screen);
+	
 }
 
 int32 AAuraEnemy::GetPlayerLevel()
 {
 	return Level;
 }
+
 
 void AAuraEnemy::BeginPlay()
 {
@@ -42,6 +51,29 @@ void AAuraEnemy::BeginPlay()
 	AbilitySystemComponent->InitAbilityActorInfo(this, this);
 	*/
 	InitAbilityActorInfo();
+	//C125
+	UAuraAttributeSet* AuraAttributeSet = CastChecked<UAuraAttributeSet>(AttributeSet);
+
+	UAuraUserWidget* AuraUserWidget = Cast<UAuraUserWidget>(HealthBarOnHead->GetUserWidgetObject());
+	if (AuraUserWidget)
+	{
+		AuraUserWidget->SetWidgetController(this);
+	}
+	
+	AbilitySystemComponent->GetGameplayAttributeValueChangeDelegate(AuraAttributeSet->GetHealthAttribute()).AddLambda(
+[this](const FOnAttributeChangeData& Data)
+		{
+			OnHealthChanged.Broadcast(Data.NewValue);
+		}
+	);
+	AbilitySystemComponent->GetGameplayAttributeValueChangeDelegate(AuraAttributeSet->GetMaxHealthAttribute()).AddLambda(
+[this](const FOnAttributeChangeData& Data)
+		{
+			OnMaxHealthChanged.Broadcast(Data.NewValue);
+		}
+	);
+	OnHealthChanged.Broadcast(AuraAttributeSet->GetHealth());
+	OnMaxHealthChanged.Broadcast(AuraAttributeSet->GetMaxHealth());
 }
 
 void AAuraEnemy::InitAbilityActorInfo()
@@ -49,6 +81,8 @@ void AAuraEnemy::InitAbilityActorInfo()
 	check(AbilitySystemComponent);
 	AbilitySystemComponent->InitAbilityActorInfo(this, this);
 	Cast<UAuraAbilitySystemComponent>(AbilitySystemComponent)->AbilityActorInfoSet();
+	//C124
+	InitializeDefaultAttributes();
 }
 
 void AAuraEnemy::HighLightActor()

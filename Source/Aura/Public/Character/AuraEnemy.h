@@ -5,8 +5,12 @@
 #include "CoreMinimal.h"
 #include "Character/AuraCharacterBase.h"
 #include "Interaction/EnemyInterface.h"
+#include "UI/WidgetController/OverlayWidgetController.h"
 #include "AuraEnemy.generated.h"
 
+class UHealthBarOnHeadWidgetController;
+struct FWidgetControllerParams;
+class UWidgetComponent;
 /**
  * 
  */
@@ -46,6 +50,14 @@ public:
 	//C73
 	virtual int32 GetPlayerLevel() override;
 	// EndCombatInterface //
+	
+	//C125
+	UPROPERTY(EditAnywhere)
+	TObjectPtr<UWidgetComponent> HealthBarOnHead;
+	UPROPERTY(BlueprintAssignable)
+	FOnAttributeChangedSignture OnHealthChanged;
+	UPROPERTY(BlueprintAssignable)
+	FOnAttributeChangedSignture OnMaxHealthChanged;
 private:
 	
 };

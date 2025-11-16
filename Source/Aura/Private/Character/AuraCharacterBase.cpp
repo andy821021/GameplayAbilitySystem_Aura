@@ -5,6 +5,9 @@
 
 #include "AbilitySystemComponent.h"
 #include "AbilitySystem/AuraAbilitySystemComponent.h"
+#include "Aura/Aura.h"
+#include "Components/CapsuleComponent.h"
+
 
 
 AAuraCharacterBase::AAuraCharacterBase()
@@ -15,6 +18,16 @@ AAuraCharacterBase::AAuraCharacterBase()
 	Weapon = CreateDefaultSubobject<USkeletalMeshComponent>("Weapon");
 	Weapon->SetupAttachment(GetMesh(),FName("WeaponHandSocket"));
 	Weapon->SetCollisionEnabled(ECollisionEnabled::NoCollision);
+	//C120
+	GetMesh()->SetCollisionResponseToChannel(ECC_Camera,ECR_Ignore);
+	GetCapsuleComponent()->SetCollisionResponseToChannel(ECC_Camera,ECR_Ignore);
+	//C123
+	GetMesh()->SetCollisionResponseToChannel(ECC_Projectile,ECR_Overlap);
+	GetMesh()->SetGenerateOverlapEvents(true);
+	//C124
+	GetCapsuleComponent()->SetGenerateOverlapEvents(false);
+
+	
 }
 
 UAbilitySystemComponent* AAuraCharacterBase::GetAbilitySystemComponent() const

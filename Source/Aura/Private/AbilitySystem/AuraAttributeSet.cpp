@@ -223,6 +223,11 @@ void UAuraAttributeSet::PostGameplayEffectExecute(const struct FGameplayEffectMo
 	*/
 	FEffectProperties Props;
 	SetEffectProperties(Props,Data);
+	//C124
+	if (Data.EvaluatedData.Attribute == GetHealthAttribute())
+	{
+		UE_LOG(LogTemp,Warning,TEXT("Changed Health on %s, Health:%f"),*Props.TargetAvatarActor.GetName(),GetHealth());
+	};
 }
 
 void UAuraAttributeSet::SetEffectProperties(FEffectProperties& EP, const FGameplayEffectModCallbackData& Data)

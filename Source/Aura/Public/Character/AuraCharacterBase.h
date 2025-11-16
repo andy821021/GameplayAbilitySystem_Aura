@@ -14,6 +14,7 @@ class UGameplayEffect;
 class UAbilitySystemComponent;
 class UAttributeSet;
 
+
 UCLASS(Abstract)
 //C21 C73改
 class AURA_API AAuraCharacterBase : public ACharacter,public IAbilitySystemInterface,public ICombatInterface
@@ -26,6 +27,9 @@ public:
 	//C21
 	virtual UAbilitySystemComponent* GetAbilitySystemComponent() const override;
 	UAttributeSet* GetAttributeSet() const { return AttributeSet; }
+
+
+	
 	
 protected:
 	virtual void BeginPlay() override;

@@ -68,7 +68,9 @@ void AAuraPlayerController::SetupInputComponent()
 	UAuraInputComponent* AuraInputComponent = CastChecked<UAuraInputComponent>(InputComponent);
 	AuraInputComponent->BindAction(MoveAction,ETriggerEvent::Triggered,this,&AAuraPlayerController::Move);
 	AuraInputComponent->BindAbilityActions(InputConfig,this,&ThisClass::AbilityInputTagPressed,&ThisClass::AbilityInputTagReleased,&ThisClass::AbilityInputTagHeld);
-	
+	//C120
+	AuraInputComponent->BindAction(ShiftAction,ETriggerEvent::Started,this,&AAuraPlayerController::ShiftPressed);
+	AuraInputComponent->BindAction(ShiftAction,ETriggerEvent::Completed,this,&AAuraPlayerController::ShiftReleased);
 }
 
 void AAuraPlayerController::Move(const FInputActionValue& InputActionValue)
@@ -181,6 +183,8 @@ void AAuraPlayerController::AbilityInputTagReleased(FGameplayTag InputTag)
 		}
 		return;
 	}
+	//C120改
+	/*
 	if (bTargeting)
 	{
 		if (GetAuraAbilitySystemComponent())
@@ -209,6 +213,29 @@ void AAuraPlayerController::AbilityInputTagReleased(FGameplayTag InputTag)
 		FollowTime = 0.f;
 		bTargeting = false;
 	}
+	*/
+	GetAuraAbilitySystemComponent()->AbilityInputTagReleased(InputTag);
+	if (!bTargeting && !bShiftKeyDown)
+	{
+		APawn* ControlledPawn = GetPawn();
+		if (FollowTime<=ShortPressThreshold && ControlledPawn)
+		{
+			if (UNavigationPath* NavigationPath = UNavigationSystemV1::FindPathToLocationSynchronously(GetWorld(),ControlledPawn->GetActorLocation(),CachedDestination))
+			{
+				Spline->ClearSplinePoints();
+				for (const FVector& Point : NavigationPath->PathPoints)
+				{
+					Spline->AddSplinePoint(Point,ESplineCoordinateSpace::World);
+					//DrawDebugSphere(GetWorld(),Point,8.f,8,FColor::Yellow,false,5.f);
+				}
+				//C107
+				CachedDestination = NavigationPath->PathPoints.Last();
+				bAutoRunning = true;
+			};
+		}
+		FollowTime = 0.f;
+		bTargeting = false;
+	}
 }
 
 void AAuraPlayerController::AbilityInputTagHeld(FGameplayTag InputTag)
@@ -229,7 +256,8 @@ void AAuraPlayerController::AbilityInputTagHeld(FGameplayTag InputTag)
 		}
 		return;
 	}
-	if (bTargeting)
+	//C120改
+	if (bTargeting || bShiftKeyDown)
 	{
 		if (GetAuraAbilitySystemComponent())
 		{
