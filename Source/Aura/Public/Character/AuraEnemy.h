@@ -3,6 +3,7 @@
 #pragma once
 
 #include "CoreMinimal.h"
+#include "AbilitySystem/Data/CharacterClassInfo.h"
 #include "Character/AuraCharacterBase.h"
 #include "Interaction/EnemyInterface.h"
 #include "UI/WidgetController/OverlayWidgetController.h"
@@ -30,6 +31,12 @@ protected:
 	//C73
 	UPROPERTY(EditAnywhere,BlueprintReadOnly,Category="CharacterClassDefault")
 	int32 Level = 1;
+
+	//C131
+	UPROPERTY(EditAnywhere,BlueprintReadOnly,Category="CharacterClassDefault")
+	ECharacterClass CharacterClass;
+	//C131改
+	virtual void  InitializeDefaultAttributes() const override;
 	
 public:
 	
@@ -58,6 +65,7 @@ public:
 	FOnAttributeChangedSignture OnHealthChanged;
 	UPROPERTY(BlueprintAssignable)
 	FOnAttributeChangedSignture OnMaxHealthChanged;
+
 private:
 	
 };
